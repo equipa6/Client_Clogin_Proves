@@ -336,32 +336,32 @@ def validacio_conta_registre_sessio(name_registre, password_registre, repeat_pas
         if client_en_espera == 0:
             client_en_espera = 1
             if nom_tretze_i_contrasenya_repeteix == False:
-                #try:
-                conn_registre = connexio_client_servidor("${}¿{}".format(name_registre,password_registre))
-                validador_connexion_register = conn_registre
-                #except:
-                    #validador_connexion_register = "Servidor"
+                try:
+                    conn_registre = connexio_client_servidor("${}¿{}".format(name_registre,password_registre))
+                    validador_connexion_register = conn_registre
+                except:
+                    validador_connexion_register = "Servidor"
                 
                 if validador_connexion_register == "Correct":
-                    cuenta_registrada.config(text="Cuenta registrada", fg="black") 
-                #elif validador_connexion_register == "Servidor":
-                    #cuenta_registrada.config(text="Servidor no connectat", fg="red")
+                    cuenta_registrada.config(text="Conta registrada", fg="black") 
+                elif validador_connexion_register == "Servidor":
+                    cuenta_registrada.config(text="Servidor no connectat", fg="red")
                 elif validador_connexion_register == "Error":
                     cuenta_registrada.config(text="Usuari ja existent", fg="red")
         else:
             if nom_tretze_i_contrasenya_repeteix == False:
-                #try:
-                client_clogin.send("${}¿{}".format(name_registre,password_registre).encode())
-                rescibri_mensaje_registro = client_clogin.recv(1024)
-                resposta_registre = rescibri_mensaje_registro.decode()
-                validador_connexion_register = resposta_registre
-                #except:
-                    #validador_connexion_register = "Servidor"
+                try:
+                    client_clogin.send("${}¿{}".format(name_registre,password_registre).encode())
+                    rescibri_mensaje_registro = client_clogin.recv(1024)
+                    resposta_registre = rescibri_mensaje_registro.decode()
+                    validador_connexion_register = resposta_registre
+                except:
+                    validador_connexion_register = "Servidor"
 
                 if validador_connexion_register == "Correct":
-                    cuenta_registrada.config(text="Cuenta registrada", fg="black")
-                #elif validador_connexion_register == "Servidor":
-                    #cuenta_registrada.config(text="Servidor no connectat", fg="red")
+                    cuenta_registrada.config(text="Conta registrada", fg="black")
+                elif validador_connexion_register == "Servidor":
+                    cuenta_registrada.config(text="Servidor no connectat", fg="red")
                 elif validador_connexion_register == "Error":
                     cuenta_registrada.config(text="Usuari ja existent", fg="red")
                             
