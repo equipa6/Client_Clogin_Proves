@@ -79,6 +79,38 @@ color_primari_variable = "#8cb3ff"
 color_secundari_variable = "#606fff"
 color_terciari_variable = "#000000"
 
+validator_ventana_user_bloq = 0
+def destory_ventana_user_bloq():
+    global validator_ventana_user_bloq
+    validator_ventana_user_bloq = 0
+    ventana_bloquejats.destroy()
+
+def ventana_usuaris_bloquejats():
+    global validator_ventana_user_bloq
+    global ventana_bloquejats
+    if validator_ventana_user_bloq == 0:
+        validator_ventana_user_bloq = 1
+        ventana_bloquejats = Toplevel()
+        ventana_bloquejats.geometry("300x400")
+        ventana_bloquejats.resizable(0,1)
+
+        frame_ventana_bloquejats = Frame(ventana_bloquejats, bg="#8cb3ff", borderwidth=2, width=300, height=50, relief="solid")
+        frame_ventana_bloquejats.grid(row=0, column=0)
+
+        titol_usuaris_bloq = Label(frame_ventana_bloquejats, text="Usuaris Bloquejats", font=("THIN", 14, "bold"), bg="#8cb3ff")
+        titol_usuaris_bloq.place(x=60, y=10)
+
+        filas = 1
+        num = 1
+        for i in bloq_users_list:
+            Label(ventana_bloquejats, text=f"{num}- {i}", font=("THIN", 12, "bold")).grid(row=filas, column=0, pady=(10,10))
+            num += 1
+            filas += 1
+            Frame(ventana_bloquejats, width=300, height=2, bg="black").grid(row=filas)
+            filas += 1
+        ventana_bloquejats.protocol("WM_DELETE_WINDOW", destory_ventana_user_bloq)
+        ventana_bloquejats.mainloop()
+
 def ventana_configuracio_general_usuari():
     global estat_usuari
     global menu_configuracio
@@ -153,7 +185,7 @@ def ventana_configuracio_general_usuari():
         entry_canviar_contrasenya.config(show="*")
         boto_canviar_contrasenya = Button(menu_configuracio, text=">>", font=("THIN", 10, "bold"), borderwidth=0, cursor="hand2", activebackground="#ffff98",fg="#ffee04", bg="#606fff", activeforeground="#606fff")
         boto_canviar_contrasenya.place(x=465, y=393)
-        llista_usuaris_bloquejats = Button(menu_configuracio, text= " Usuaris Bloquejats", font=("THIN", 16, "bold"), borderwidth=0, cursor="hand2", activebackground="#ffff98",fg="#ffee04", bg="#606fff", activeforeground="#606fff", bitmap="error", compound="left")
+        llista_usuaris_bloquejats = Button(menu_configuracio, text= " Usuaris Bloquejats", font=("THIN", 16, "bold"), borderwidth=0, cursor="hand2", activebackground="#ffff98",fg="#ffee04", bg="#606fff", activeforeground="#606fff", bitmap="error", compound="left", command=lambda:ventana_usuaris_bloquejats())
         llista_usuaris_bloquejats.place(x=150, y=500)
         linia_separar_ajustes = Frame(menu_configuracio, width=500, height=2, relief="solid", bg="black")
         linia_separar_ajustes.place(x=0, y=220)
@@ -334,7 +366,7 @@ def recibir_mensajes():
             user_name_val = mensaje_amigo[0:indice_coma]
             user_name_val = user_name_val.strip()
 
-            if user_name_val in llista_usuaris_agregats and user_name_val == name_user:
+            if user_name_val in llista_usuaris_agregats and user_name_val == name_user and user_name_val not in bloq_users_list:
                 if first_msj == 0:
                     widget_text_conversa.config(state=NORMAL)
                     widget_text_conversa.insert(INSERT, "{} >> {}".format(name_user,mensaje_amigo_normal))
@@ -387,6 +419,16 @@ def fi_de_sessio():
         print("No s'ha pogut enviar el missatge de fi de sessio")
         chat_ventana.destroy()
 
+bloq_users_list = []
+def usuaris_bloquejats(nom_del_usuari_bloq):
+    global bloq_users_list
+    if nom_del_usuari_bloq != "Usuari":
+        bloq_users_list.append(nom_del_usuari_bloq)
+
+def debloquejar_usuaris(nom_del_usuari_a_desbloquejar):
+    global bloq_users_list
+    if nom_del_usuari_a_desbloquejar in bloq_users_list:
+        bloq_users_list.remove(nom_del_usuari_a_desbloquejar)
 
 def ventana_chat_principal(nom_usuari_lateral):
     global nom_usuari
@@ -520,9 +562,10 @@ def ventana_chat_principal(nom_usuari_lateral):
     label_ajustes_button = Menubutton(frame_usuari, image=ajustes_button, borderwidth=0, bg="#4682B4", activebackground="#4682B4", cursor="hand2")
     label_ajustes_button.place(x=810, y=25)
     menu = Menu(label_ajustes_button, tearoff=False, bg="#61758B", fg="#ffffff")
-    menu.add_radiobutton(label="Bloquejar", font=("Calibri", 13, "bold"))
+    menu.add_radiobutton(label="Bloquejar", font=("Calibri", 13, "bold"), command=lambda:usuaris_bloquejats(name_user))
     menu.add_radiobutton(label="Arxivar", font=("Calibri", 13, "bold"))
     menu.add_radiobutton(label="Ancorar", font=("Calibri", 13, "bold"))
+    menu.add_radiobutton(label="Desbloquejar", font=("Calibri", 13, "bold"), command=lambda:debloquejar_usuaris(name_user))
     label_ajustes_button["menu"] = menu
 
     frame_conversa_del_chat = Frame(frame_conversa, width=859, height=556, bg="white",borderwidth=0)
