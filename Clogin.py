@@ -67,11 +67,18 @@ def canviarcolorsprincipals(color, secundari, lletra):
     frame_usuaris_afegits.config(bg=color)
     sframe.config(bg=color)
     try:
+        ventana_bloquejats.config(bg=color)
+        frame_ventana_bloquejats.config(bg=secundari)
+        titol_usuaris_bloq.config(bg=secundari, fg=lletra)
+    except:
+        pass
+    try:
         ventana_afegir_usuaris.config(bg=color)
         titol_usuaris.config(bg=color, fg=lletra)
         imatge_ventana.config(bg=color)
         introduir_nom_usuari.config(bg=color, fg=lletra)
         boto_afegir_usuaris.config(bg=secundari)
+        
     except:
         pass
 
@@ -88,16 +95,18 @@ def destory_ventana_user_bloq():
 def ventana_usuaris_bloquejats():
     global validator_ventana_user_bloq
     global ventana_bloquejats
+    global frame_ventana_bloquejats
+    global titol_usuaris_bloq
     if validator_ventana_user_bloq == 0:
         validator_ventana_user_bloq = 1
-        ventana_bloquejats = Toplevel()
+        ventana_bloquejats = Toplevel(bg=color_primari_variable)
         ventana_bloquejats.geometry("300x400")
         ventana_bloquejats.resizable(0,1)
 
-        frame_ventana_bloquejats = Frame(ventana_bloquejats, bg="#8cb3ff", borderwidth=2, width=300, height=50, relief="solid")
+        frame_ventana_bloquejats = Frame(ventana_bloquejats, bg=color_secundari_variable, borderwidth=2, width=300, height=50, relief="solid")
         frame_ventana_bloquejats.grid(row=0, column=0)
 
-        titol_usuaris_bloq = Label(frame_ventana_bloquejats, text="Usuaris Bloquejats", font=("THIN", 14, "bold"), bg="#8cb3ff")
+        titol_usuaris_bloq = Label(frame_ventana_bloquejats, text="Usuaris Bloquejats", font=("THIN", 14, "bold"), bg=color_secundari_variable, fg=color_terciari_variable,)
         titol_usuaris_bloq.place(x=60, y=10)
 
         filas = 1
