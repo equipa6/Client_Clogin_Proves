@@ -284,6 +284,7 @@ client_en_espera = 0
 def validacio_conta(name, password):
     global validador_connexion
     global client_en_espera
+    global no_connectivitat_servidor
     name = name.strip()
     password = password.strip()
     if name != "" and password != "":
@@ -295,13 +296,15 @@ def validacio_conta(name, password):
                     conn = connexio_client_servidor("{}&{}".format(name,password))
                     validador_connexion = conn
                 except:
-                    validador_connexion = "Error" 
+                    validador_connexion = "Servidor" 
                 
                 if validador_connexion == "Correct":
                     root.destroy()
                     ventana_chat_principal(name)
+                elif validador_connexion == "Servidor":
+                    no_connectivitat_servidor.config(fg="red", text="El servidor no està connectat o en xarxa")
                 elif validador_connexion == "Error":
-                    pass
+                    no_connectivitat_servidor.config(fg="red", text="L'usuari o contrasenya estan malament")
         else:
             if nom_tretze == False:
                 try:
@@ -310,13 +313,16 @@ def validacio_conta(name, password):
                     resp = res.decode()
                     validador_connexion = resp
                 except:
-                    pass
+                    validador_connexion = "Servidor"
 
                 if validador_connexion == "Correct":
                     root.destroy()
                     ventana_chat_principal(name)
+                elif validador_connexion == "Servidor":
+                    no_connectivitat_servidor.config(fg="red", text="El servidor no està connectat o en xarxa")
                 elif validador_connexion == "Error":
-                    pass
+                    no_connectivitat_servidor.config(fg="red", text="L'usuari o contrasenya estan malament")
+
 
 
 validador_connexion_register = ""
@@ -648,6 +654,7 @@ def ventana_registredesessio():
 def ventana_inicidesessio():
     global root
     global inp_nom
+    global no_connectivitat_servidor
     try:
         ventana.destroy()
     except:
@@ -679,6 +686,9 @@ def ventana_inicidesessio():
 
     boton_singup = Button(root, text="Entra", fg="#ffee04", bg="#606fff", cursor="hand2", font=("Calibri", 15, "bold"), width=18, borderwidth=0, activebackground="#ffff98", activeforeground="#606fff", command=lambda:validacio_conta(inp_nom.get(), inp_contrasenya.get()))
     boton_singup.place(x=105, y=370)
+
+    no_connectivitat_servidor = Label(root, text="",font=("Calibri", 12, "bold"), fg="white", bg="white")
+    no_connectivitat_servidor.place(x=60, y=235)
 
     lab_register = Label(root, text="No tens compte?", font=("THIN", 14, "underline"), bg="#FFFFFF")
     lab_register.place(x=35, y=530)
